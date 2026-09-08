@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Canvas Trắc Nghiệm An Ninh Mạng Song Ngữ - 82 Câu Hỏi</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --card-hover: #1e293b;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-accent: #38bdf8;
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.15);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.15);
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .quiz-app {
+      width: 100%;
+      max-width: 920px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .app-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .app-title-box h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .app-title-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-stats {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-pill span {
+      color: var(--primary-accent);
+      font-weight: 800;
+    }
+
+    .btn-shuffle-head {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1.5px solid var(--primary-accent);
+      color: var(--primary-accent);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-shuffle-head:hover {
+      background: var(--primary-accent);
+      color: #0b1120;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .progress-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 20px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2563eb, #38bdf8);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .nav-drawer {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .drawer-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .drawer-toggle-btn:hover {
+      color: var(--text-main);
+    }
+
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 6px;
+      max-height: 130px;
+      overflow-y: auto;
+      padding-top: 8px;
+    }
+
+    .q-dot {
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .q-dot:hover {
+      border-color: var(--primary-accent);
+      color: #fff;
+    }
+
+    .q-dot.active {
+      border-color: var(--primary-accent);
+      background: rgba(56, 189, 248, 0.15);
+      color: #fff;
+    }
+
+    .q-dot.correct {
+      background: var(--success-soft);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .q-dot.incorrect {
+      background: var(--danger-soft);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .question-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .q-type-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--primary-accent);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+
+    .q-header-box {
+      margin-bottom: 22px;
+    }
+
+    .q-title-en {
+      font-size: 1.06rem;
+      line-height: 1.6;
+      font-weight: 600;
+      color: #f3f4f6;
+      white-space: pre-line;
+    }
+
+    .q-title-vi {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      font-weight: 400;
+      color: #94a3b8;
+      margin-top: 8px;
+      padding-left: 12px;
+      border-left: 3px solid #38bdf8;
+      white-space: pre-line;
+    }
+
+    pre.code-block {
+      font-family: var(--font-code);
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 0.88rem;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 12px 16px;
+      background: #0b1120;
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .option-item:hover:not(.locked) {
+      background: var(--card-hover);
+      border-color: #3b82f6;
+      transform: translateX(4px);
+    }
+
+    .opt-letter {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 7px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      font-weight: 700;
+      font-size: 0.82rem;
+      margin-right: 14px;
+      color: var(--primary-accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .opt-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .opt-en {
+      font-size: 0.93rem;
+      color: #e2e8f0;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .opt-vi {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .option-item.selected {
+      border-color: var(--primary-accent);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    .option-item.selected .opt-letter {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .option-item.correct {
+      background: var(--success-soft) !important;
+      border-color: var(--success) !important;
+    }
+    .option-item.correct .opt-en { color: #ecfdf5 !important; }
+    .option-item.correct .opt-vi { color: #a7f3d0 !important; }
+    .option-item.correct .opt-letter {
+      background: var(--success) !important;
+      color: #fff !important;
+      border-color: var(--success) !important;
+    }
+
+    .option-item.wrong {
+      background: var(--danger-soft) !important;
+      border-color: var(--danger) !important;
+    }
+    .option-item.wrong .opt-en { color: #fef2f2 !important; }
+    .option-item.wrong .opt-vi { color: #fecaca !important; }
+    .option-item.wrong .opt-letter {
+      background: var(--danger) !important;
+      color: #fff !important;
+      border-color: var(--danger) !important;
+    }
+
+    .option-item.locked {
+      cursor: default;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary {
+      background: #1f293d;
+      color: #cbd5e1;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #334155;
+      color: #fff;
+    }
+
+    .btn-secondary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #0284c7);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .summary-card {
+      display: none;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .summary-score-dial {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 4px solid var(--primary-accent);
+      background: radial-gradient(circle, #1e293b, #0b1120);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
+    }
+
+    .summary-score-dial .score-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .summary-score-dial .score-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .summary-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .summary-desc {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    .summary-breakdown {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .breakdown-item {
+      background: #0b1120;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 22px;
+    }
+
+    .breakdown-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .breakdown-val.pass { color: var(--success); }
+    .breakdown-val.fail { color: var(--danger); }
+    .breakdown-val.pct { color: var(--primary-accent); }
+
+    .breakdown-lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .summary-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+      .quiz-card { padding: 22px 18px; }
+      .app-header { flex-direction: column; align-items: flex-start; }
+      .header-stats { width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-app">
+    <header class="app-header">
+      <div class="app-title-box">
+        <h1>Canvas Ôn Tập An Ninh Mạng (Song Ngữ)</h1>
+        <p>Hỗ trợ dịch tiếng Việt kèm tính năng xáo trộn câu hỏi</p>
+      </div>
+      <div class="header-stats">
+        <button class="btn-shuffle-head" onclick="triggerManualShuffle()">🔀 Trộn câu hỏi</button>
+        <div class="stat-pill">Điểm: <span id="stat-score">0</span></div>
+        <div class="stat-pill">Đúng: <span id="stat-correct">0/82</span></div>
+      </div>
+    </header>
+
+    <div class="progress-card">
+      <div class="progress-meta">
+        <span id="label-progress-step">Câu 1 trên 82</span>
+        <span id="label-progress-pct">0% hoàn thành</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <div class="nav-drawer">
+      <button class="drawer-toggle-btn" onclick="toggleNavGrid()">
+        <span>Mục lục câu hỏi (Nhấp để mở rộng / thu gọn)</span>
+        <span id="nav-arrow">▼</span>
+      </button>
+      <div class="question-grid" id="question-grid"></div>
+    </div>
+
+    <main class="quiz-card" id="quiz-canvas">
+      <div>
+        <div class="question-meta">
+          <span class="q-type-badge" id="badge-question-type">Chọn 1 đáp án</span>
+          <span class="q-type-badge" id="badge-question-index">Câu #1</span>
+        </div>
+        <div class="q-header-box">
+          <div class="q-title-en" id="q-en"></div>
+          <div class="q-title-vi" id="q-vi"></div>
+        </div>
+        <div class="options-grid" id="options-box"></div>
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn btn-secondary" id="btn-prev" onclick="goToPrevQuestion()">← Câu trước</button>
+        <button class="btn btn-primary" id="btn-submit-multi" onclick="submitMultiAnswer()" style="display:none;">Xác nhận đáp án</button>
+        <button class="btn btn-primary" id="btn-next" onclick="goToNextQuestion()">Câu tiếp theo →</button>
+      </div>
+    </main>
+
+    <div class="summary-card" id="summary-view">
+      <div class="summary-score-dial">
+        <div class="score-value" id="summary-percentage">0%</div>
+        <div class="score-label">Tỷ Lệ Đạt</div>
+      </div>
+      <h2 class="summary-title" id="summary-title">Đã hoàn thành 82 câu!</h2>
+      <p class="summary-desc" id="summary-comment">Nhận xét kết quả của bạn.</p>
+
+      <div class="summary-breakdown">
+        <div class="breakdown-item">
+          <div class="breakdown-val pass" id="summary-correct">0</div>
+          <div class="breakdown-lbl">CÂU ĐÚNG</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-val fail" id="summary-incorrect">0</div>
+          <div class="breakdown-lbl">CÂU SAI</div>
+        </div>
+        <div class="breakdown-item">
+          <div class="breakdown-val pct" id="summary-total-score">0</div>
+          <div class="breakdown-lbl">TỔNG ĐIỂM</div>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn btn-secondary" onclick="restartQuiz(false)">Làm lại (Giữ thứ tự)</button>
+        <button class="btn btn-primary" onclick="restartQuiz(true)">🔀 Trộn đề & Làm lại</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dữ liệu song ngữ đầy đủ 82 câu hỏi
+    const rawQuizDataset = [
+      {
+        q: "As part of a new industry regulation, companies are required to utilize secure, standardized OS settings. A technician must ensure the OS settings are hardened.\nWhich of the following is the BEST way to do this?",
+        q_vi: "Theo quy định mới của ngành, các công ty phải áp dụng các thiết lập hệ điều hành an toàn và chuẩn hóa. Kỹ thuật viên phải đảm bảo các thiết lập HĐH được 'làm cứng' (hardened).\nCách tốt nhất để thực hiện là gì?",
+        opts: [
+          { en: "Use a vulnerability scanner.", vi: "Sử dụng trình quét lỗ hổng bảo mật." },
+          { en: "Use a configuration compliance scanner.", vi: "Sử dụng trình quét tuân thủ cấu hình chuẩn." },
+          { en: "Use a passive, in-line scanner.", vi: "Sử dụng trình quét thụ động dạng in-line." },
+          { en: "Use a protocol analyzer.", vi: "Sử dụng bộ phân tích giao thức (packet analyzer)." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A security analyst is hardening a web server, which should allow a secure certificate-based session using the organization's PKI infrastructure. The web server should also utilize the latest security techniques and standards. Given this set of requirements, which of the following techniques should the analyst implement to BEST meet these requirements? (Choose two.)",
+        q_vi: "Chuyên viên phân tích đang làm cứng web server để cho phép phiên làm việc an toàn dựa trên chứng chỉ thuộc PKI của tổ chức và dùng các tiêu chuẩn mới nhất. Kỹ thuật nào nên triển khai? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Install an X-509-compliant certificate.", vi: "Cài đặt chứng chỉ số chuẩn X.509." },
+          { en: "Implement a CRL using an authorized CA.", vi: "Triển khai danh sách thu hồi chứng chỉ (CRL) từ CA ủy quyền." },
+          { en: "Enable and configure TLS on the server.", vi: "Kích hoạt và cấu hình TLS trên máy chủ." },
+          { en: "Install a certificate signed by a public CA.", vi: "Cài chứng chỉ do CA công cộng ký." },
+          { en: "Configure the web server to use a host header", vi: "Cấu hình máy chủ web dùng host header." }
+        ],
+        ans: [0, 2]
+      },
+      {
+        q: "A security administrator has been assigned to review the security posture of the standard corporate system image for virtual machines. The review reveals several accounts that will not be used in production.\nWhich of the following would correct the deficiencies?",
+        q_vi: "Quản trị viên rà soát bản sao hệ điều hành chuẩn (image) cho máy ảo và nhận thấy có nhiều tài khoản không sử dụng trong môi trường thực tế.\nBiện pháp nào khắc phục vấn đề này?",
+        opts: [
+          { en: "Mandatory access controls", vi: "Kiểm soát truy cập bắt buộc (MAC)." },
+          { en: "Disable remote login", vi: "Vô hiệu hóa đăng nhập từ xa." },
+          { en: "Host hardening", vi: "Làm cứng máy chủ (vô hiệu hóa tài khoản thừa, dịch vụ thừa)." },
+          { en: "Disabling services", vi: "Vô hiệu hóa các dịch vụ." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Task ghép cổng (port) mặc định với dịch vụ tương ứng:\nFTP ___ | Telnet ___ | SMTP ___ | SNMP ___ | SCP ___ | TFTP ___",
+        q_vi: "Ghép đúng cổng mặc định của từng giao thức mạng:",
+        opts: [
+          { en: "FTP → 21 | Telnet → 23 | SMTP → 25 | SNMP → 161 | SCP → 22 | TFTP → 69", vi: "FTP: 21 | Telnet: 23 | SMTP: 25 | SNMP: 161 | SCP: 22 | TFTP: 69" },
+          { en: "FTP → 22 | Telnet → 21 | SMTP → 25 | SNMP → 69 | SCP → 23 | TFTP → 161", vi: "FTP: 22 | Telnet: 21 | SMTP: 25 | SNMP: 69 | SCP: 23 | TFTP: 161" },
+          { en: "FTP → 21 | Telnet → 25 | SMTP → 23 | SNMP → 161 | SCP → 69 | TFTP → 22", vi: "FTP: 21 | Telnet: 25 | SMTP: 23 | SNMP: 161 | SCP: 69 | TFTP: 22" },
+          { en: "FTP → 23 | Telnet → 21 | SMTP → 25 | SNMP → 22 | SCP → 161 | TFTP → 69", vi: "FTP: 23 | Telnet: 21 | SMTP: 25 | SNMP: 22 | SCP: 161 | TFTP: 69" }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Ann, a user, states that her machine has been behaving erratically over the past week. She has experienced slowness and input lag and found text files that appear to contain pieces of her emails or online conversations with coworkers. The technician runs a standard virus scan but detects nothing.\nWhich of the following types of malware has infected the machine?",
+        q_vi: "Người dùng nhận thấy máy bị giật lag và xuất hiện các file text chứa đoạn hội thoại hoặc email của cô ấy. Quét virus thông thường không thấy gì.\nMáy tính đã bị nhiễm loại mã độc nào?",
+        opts: [
+          { en: "Ransomware", vi: "Mã độc tống tiền (Ransomware)." },
+          { en: "Rootkit", vi: "Mã độc chiếm quyền điều khiển sâu (Rootkit)." },
+          { en: "Backdoor", vi: "Cửa sau (Backdoor)." },
+          { en: "Keylogger", vi: "Phần mềm ghi lại thao tác gõ phím (Keylogger)." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "A cybersecurity analyst is looking into the payload of a packet capture. Origin host history shows:\n<pre class=\"code-block\">mkdir /local/usr/bin/somedirectory\nnc -l 192.168.5.1 -p 9856\nping -c 30 8.8.8.8 -s 600\nrm /etc/dir2/somefile\nrm -rm /etc/dir2/\ntraceroute 8.8.8.8\npskill pid 9487</pre>\nGiven the above output, which of the following commands would have established the questionable socket?",
+        q_vi: "Nhìn vào lịch sử lệnh của máy nguồn ở trên, lệnh nào đã mở socket đáng ngờ qua cổng không tiêu chuẩn?",
+        opts: [
+          { en: "traceroute 8.8.8.8", vi: "Lệnh kiểm tra đường đi traceroute." },
+          { en: "ping -c 30 8.8.8.8 -s 600", vi: "Lệnh ping kiểm tra kết nối mạng." },
+          { en: "nc -l 192.168.5.1 -p 9856", vi: "Lệnh netcat lắng nghe trên cổng 9856." },
+          { en: "pskill pid 9487", vi: "Lệnh dừng tiến trình (kill process)." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "An organization has air gapped a critical system.\nWhich of the following BEST describes the type of attacks that are prevented by this security measure?",
+        q_vi: "Một tổ chức đã cách ly vật lý (air gap) hệ thống quan trọng.\nBiện pháp này ngăn chặn tốt nhất loại tấn công nào?",
+        opts: [
+          { en: "Attacks from another local network segment", vi: "Tấn công từ phân đoạn mạng cục bộ khác." },
+          { en: "Attacks exploiting USB drives and removable media", vi: "Tấn công qua USB hoặc thiết bị ngoại vi gắn ngoài." },
+          { en: "Attacks that spy on leaked emanations or signals", vi: "Tấn công nghe lén qua bức xạ tín hiệu." },
+          { en: "Attacks that involve physical intrusion or theft", vi: "Tấn công đột nhập vật lý hoặc trộm cắp thiết bị." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following precautions MINIMIZES the risk from network attacks directed at multifunction printers, as well as the impact on functionality at the same time?",
+        q_vi: "Biện pháp nào giúp giảm thiểu rủi ro tấn công mạng vào máy in đa chức năng mà vẫn đảm bảo hoạt động bình thường?",
+        opts: [
+          { en: "Isolating the systems using VLANs", vi: "Cách ly hệ thống máy in bằng mạng ảo (VLAN)." },
+          { en: "Installing a software-based IPS on all devices", vi: "Cài đặt phần mềm IPS lên tất cả thiết bị." },
+          { en: "Enabling full disk encryption", vi: "Bật mã hóa toàn bộ ổ đĩa." },
+          { en: "Implementing a unique user PIN access functions", vi: "Bắt buộc nhập mã PIN người dùng khi in." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A security administrator suspects a MITM attack aimed at impersonating the default gateway is underway.\nWhich of the following tools should the administrator use to detect this attack? (Choose two.)",
+        q_vi: "Quản trị viên nghi ngờ có tấn công Man-in-the-Middle giả mạo Default Gateway đang diễn ra.\nCông cụ nào dùng để phát hiện? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Ping", vi: "Ping (kiểm tra khả năng phản hồi mạng)." },
+          { en: "Ipconfig", vi: "Ipconfig (xem cấu hình IP máy trạm)." },
+          { en: "Tracert", vi: "Tracert (dò đường đi của gói tin đến gateway)." },
+          { en: "Netstat", vi: "Netstat (xem kết nối mạng mở)." },
+          { en: "Dig", vi: "Dig (tra cứu bản ghi DNS)." },
+          { en: "Nslookup", vi: "Nslookup (tra cứu máy chủ phân giải tên miền)." }
+        ],
+        ans: [0, 2]
+      },
+      {
+        q: "An attacker discovers a new vulnerability in an enterprise application. The attacker takes advantage of the vulnerability by developing new malware. After installing the malware, the attacker is provided with access to the infected machine.\nWhich of the following is being described?",
+        q_vi: "Kẻ tấn công tìm thấy lỗ hổng mới chưa được công bố trong ứng dụng doanh nghiệp và viết mã độc khai thác nó.\nKhái niệm nào mô tả điều này?",
+        opts: [
+          { en: "Zero-day exploit", vi: "Khai thác lỗ hổng Zero-day (chưa có bản vá)." },
+          { en: "Remote code execution", vi: "Thực thi mã từ xa (RCE)." },
+          { en: "Session hijacking", vi: "Đánh cắp phiên làm việc." },
+          { en: "Command injection", vi: "Chèn câu lệnh độc hại." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A security administrator receives an account lock-out message due to a brute force attack on all accounts that had logged into that machine over the past 3 days.\nWhich of the following can be implemented to reduce the likelihood of this attack going undetected?",
+        q_vi: "Quản trị viên bị khóa tài khoản sau đợt tấn công brute force kéo dài 3 ngày.\nGiải pháp nào giúp tránh việc cuộc tấn công bị bỏ lọt mà không được phát hiện kịp thời?",
+        opts: [
+          { en: "Password complexity rules", vi: "Quy tắc độ phức tạp của mật khẩu." },
+          { en: "Continuous monitoring", vi: "Giám sát liên tục (Continuous monitoring) theo thời gian thực." },
+          { en: "User access reviews", vi: "Đánh giá định kỳ quyền truy cập người dùng." },
+          { en: "Account lockout policies", vi: "Chính sách khóa tài khoản." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A web application is configured to target browsers and allow access to bank accounts to siphon money to a foreign account.\nThis is an example of which of the following attacks?",
+        q_vi: "Ứng dụng web bị chèn mã độc nhằm vào trình duyệt người dùng để rút trộm tiền trong tài khoản ngân hàng.\nĐây là ví dụ của hình thức tấn công nào?",
+        opts: [
+          { en: "SQL injection", vi: "Tấn công tiêm mã SQL." },
+          { en: "Header manipulation", vi: "Thao túng HTTP Header." },
+          { en: "Cross-site scripting (XSS)", vi: "Tấn công Cross-site scripting (XSS qua trình duyệt)." },
+          { en: "Flash cookie exploitation", vi: "Khai thác Flash cookie." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "An administrator discovers the following log entry on a server:\n<pre class=\"code-block\">Nov 12 2013 00:23:45 httpd[2342]: GET /app2/prod/proc/process.php?input=change;cd%20../../../etc;cat%20shadow</pre>\nWhich of the following attacks is being attempted?",
+        q_vi: "Dựa vào dòng log trên máy chủ chứa lệnh `cat shadow`, hình thức tấn công nào đang diễn ra?",
+        opts: [
+          { en: "Command injection", vi: "Tấn công chèn lệnh hệ điều hành (Command injection)." },
+          { en: "Password attack", vi: "Tấn công mật khẩu." },
+          { en: "Buffer overflow", vi: "Tấn công tràn bộ đệm." },
+          { en: "Cross-site scripting", vi: "Tấn công Cross-site scripting." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Xác định loại tấn công cho từng tình huống:\n1) Email diện rộng kèm link giả mạo\n2) Điện thoại lừa đảo nhắm vào CEO\n3) Giả danh IT gọi điện hỏi pass\n4) Tin nhắn MXH spam link độc\n5) Khai thác thông tin cá nhân qua nói chuyện",
+        q_vi: "Phân loại đúng các kiểu tấn công phi kỹ thuật (Social Engineering):",
+        opts: [
+          { en: "1 → Phishing, 2 → Whaling, 3 → Vishing, 4 → Spim, 5 → Social Engineering", vi: "1: Phishing | 2: Whaling (săn cá lớn) | 3: Vishing (qua thoại) | 4: Spim (spam IM) | 5: Social Engineering" },
+          { en: "1 → Spoofing, 2 → Vishing, 3 → Whaling, 4 → Spam, 5 → Hoax", vi: "1: Spoofing | 2: Vishing | 3: Whaling | 4: Spam | 5: Hoax" },
+          { en: "1 → Phishing, 2 → Social Engineering, 3 → Vishing, 4 → Hoax, 5 → Spim", vi: "1: Phishing | 2: Social Engineering | 3: Vishing | 4: Hoax | 5: Spim" },
+          { en: "1 → Whaling, 2 → Phishing, 3 → Vishing, 4 → Spim, 5 → Spoofing", vi: "1: Whaling | 2: Phishing | 3: Vishing | 4: Spim | 5: Spoofing" }
+        ],
+        ans: [0]
+      },
+      {
+        q: "An attacker uses a network sniffer to capture the packets of a transaction that adds $20 to a gift card. The attacker then uses a function of the sniffer to push those packets back onto the network again, adding another $20 to the gift card. This can be done many times.\nWhich of the following describes this type of attack?",
+        q_vi: "Kẻ tấn công bắt gói tin giao dịch nạp 20$ thẻ quà tặng rồi phát lại gói tin nhiều lần để nhận thêm tiền.\nĐây là loại tấn công nào?",
+        opts: [
+          { en: "Integer overflow attack", vi: "Tràn số nguyên." },
+          { en: "Smurf attack", vi: "Tấn công từ chối dịch vụ Smurf." },
+          { en: "Replay attack", vi: "Tấn công phát lại (Replay attack)." },
+          { en: "Buffer overflow attack", vi: "Tấn công tràn bộ đệm." },
+          { en: "Cross-site scripting attack", vi: "Tấn công XSS." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Which of the following are MOST susceptible to birthday attacks?",
+        q_vi: "Đối tượng nào dễ bị ảnh hưởng nhất bởi tấn công ngày sinh (Birthday attack - tìm đụng độ hash)?",
+        opts: [
+          { en: "Hashed passwords", vi: "Mật khẩu lưu dưới dạng mã băm (Hash)." },
+          { en: "Digital certificates", vi: "Chứng chỉ số." },
+          { en: "Encryption passwords", vi: "Mật khẩu mã hóa đối xứng." },
+          { en: "One time passwords", vi: "Mật khẩu dùng 1 lần (OTP)." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "While performing surveillance activities, an attacker determines that an organization is using 802.1X to secure LAN access.\nWhich of the following attack mechanisms can the attacker utilize to bypass the identified network security?",
+        q_vi: "Mạng LAN sử dụng chuẩn chứng thực cổng 802.1X. Cơ chế tấn công nào giúp kẻ xấu có thể vượt qua?",
+        opts: [
+          { en: "MAC spoofing", vi: "Giả mạo địa chỉ MAC đã được xác thực (MAC spoofing)." },
+          { en: "Pharming", vi: "Điều hướng người dùng đến web giả mạo (Pharming)." },
+          { en: "Xmas attack", vi: "Tấn công gói tin Xmas scan." },
+          { en: "ARP poisoning", vi: "Đầu độc bảng ARP." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A malicious attacker has intercepted HTTP traffic and inserted an ASCII line that sets the referrer URL.\nWhich of the following is the attacker most likely utilizing?",
+        q_vi: "Kẻ tấn công can thiệp vào luồng HTTP và chèn thêm dòng thiết lập Referrer URL.\nKẻ đó đang dùng kỹ thuật gì?",
+        opts: [
+          { en: "Header manipulation", vi: "Thao túng tiêu đề HTTP (Header manipulation)." },
+          { en: "Cookie hijacking", vi: "Đánh cắp Cookie." },
+          { en: "Cross-site scripting", vi: "Tấn công Cross-site scripting." },
+          { en: "Xml injection", vi: "Tiêm mã độc XML." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "While reviewing the security controls in place for a web-based application, an assessor notices no password strength requirements in place.\nWhich password requirements will MOST effectively improve security against brute force? (Choose two.)",
+        q_vi: "Để chống tấn công Brute Force mật khẩu hiệu quả nhất, hai yêu cầu nào nên áp dụng? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Minimum complexity", vi: "Độ phức tạp tối thiểu (chữ hoa, thường, số, ký tự đặc biệt)." },
+          { en: "Maximum age limit", vi: "Thời gian sử dụng tối đa của mật khẩu." },
+          { en: "Maximum length", vi: "Độ dài tối đa." },
+          { en: "Minimum length", vi: "Độ dài tối thiểu (Minimum length)." },
+          { en: "Minimum age limit", vi: "Thời gian tối thiểu trước khi được phép đổi pass." },
+          { en: "Minimum re-use limit", vi: "Số lần không được lặp lại mật khẩu cũ." }
+        ],
+        ans: [0, 3]
+      },
+      {
+        q: "A security analyst reviews a packet capture directed at a company's server in the DMZ:\n<pre class=\"code-block\">10:55:24 192.168.1.10:5000 > 172.31.67.4:21 [S]\n10:55:24 192.168.1.10:5001 > 172.31.67.4:22 [S]\n10:55:24 192.168.1.10:5002 > 172.31.67.4:25 [S]\n10:55:24 192.168.1.10:5003 > 172.31.67.4:37 [S]</pre>\nWhich ACL provides the BEST protection while minimizing service interruption?",
+        q_vi: "Luật ACL nào ngăn chặn tốt nhất cuộc tấn công quét cổng trên từ IP 192.168.1.10 mà ít ảnh hưởng dịch vụ nhất?",
+        opts: [
+          { en: "DENY TCP From ANY to 172.31.64.4", vi: "Chặn toàn bộ TCP từ mọi nguồn đến máy chủ." },
+          { en: "Deny UDP from 192.168.1.0/24 to 172.31.67.0/24", vi: "Chặn UDP dải mạng nguồn (không khớp vì đây là TCP)." },
+          { en: "Deny IP from 192.168.1.10/32 to 0.0.0.0/0", vi: "Chặn IP nguồn đến mọi nơi trên mạng." },
+          { en: "Deny TCP from 192.168.1.10 to 172.31.67.4", vi: "Chặn đúng luồng TCP từ IP 192.168.1.10 đến máy chủ 172.31.67.4." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "An attack that is using interference as its main attack to impede network traffic is which of the following?",
+        q_vi: "Hình thức tấn công nào dùng sự can nhiễu sóng làm công cụ cản trở giao thông mạng?",
+        opts: [
+          { en: "Introducing too much data to a target's memory allocation", vi: "Gửi quá nhiều dữ liệu vào bộ nhớ." },
+          { en: "Utilizing a previously unknown security flaw against the target", vi: "Khai thác lỗ hổng chưa từng biết đến." },
+          { en: "Using a similar wireless configuration of a nearby network", vi: "Dùng cấu hình không dây tương tự của mạng lân cận để gây nhiễu/đánh lừa." },
+          { en: "Inundating a target system with SYN requests", vi: "Làm ngập hệ thống bằng yêu cầu SYN." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "A user needs to send sensitive information to a colleague using PKI.\nWhich of the following concepts apply when a sender encrypts the message hash with the sender's private key? (Choose two.)",
+        q_vi: "Khi người gửi mã hóa hàm băm (hash) của bức thư bằng Private Key của chính mình (chữ ký số), hai khái niệm nào đạt được? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Non-repudiation", vi: "Chống chối bỏ (Non-repudiation)." },
+          { en: "Email content encryption", vi: "Mã hóa nội dung email (Bảo mật thông tin)." },
+          { en: "Steganography", vi: "Giấu tin trong ảnh/tập tin." },
+          { en: "Transport security", vi: "Bảo mật tầng truyền tải." },
+          { en: "Message integrity", vi: "Tính toàn vẹn của dữ liệu (Message integrity)." }
+        ],
+        ans: [0, 4]
+      },
+      {
+        q: "A penetration tester is crawling a target website that is available to the public.\nWhich of the following represents the actions the penetration tester is performing?",
+        q_vi: "Chuyên viên kiểm thử đang cào dữ liệu trên trang web công khai của mục tiêu.\nHành động này thuộc bước nào?",
+        opts: [
+          { en: "URL hijacking", vi: "Chiếm đoạt liên kết URL." },
+          { en: "Reconnaissance", vi: "Thu thập thông tin mục tiêu (Reconnaissance)." },
+          { en: "White box testing", vi: "Kiểm thử hộp trắng." },
+          { en: "Escalation of privilege", vi: "Leo thang đặc quyền." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "An in-house penetration tester is using a packet capture device to listen in on network communications. This is an example of:",
+        q_vi: "Tester dùng thiết bị bắt gói tin để lắng nghe truyền thông mạng nội bộ. Đây là ví dụ của:",
+        opts: [
+          { en: "Passive reconnaissance", vi: "Thu thập thông tin thụ động (Passive reconnaissance)." },
+          { en: "Persistence", vi: "Duy trì hiện diện lâu dài." },
+          { en: "Escalation of privileges", vi: "Leo thang đặc quyền." },
+          { en: "Exploiting the switch", vi: "Khai thác lỗ hổng switch." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "An external contractor, who has not been given information about the software or network architecture, is conducting a penetration test.\nWhich of the following BEST describes the test being performed?",
+        q_vi: "Kiểm thử viên bên ngoài thực hiện pentest mà không được cung cấp trước bất kỳ thông tin nào về hệ thống hay mã nguồn.\nĐây là loại kiểm thử gì?",
+        opts: [
+          { en: "Black box", vi: "Kiểm thử hộp đen (Black box)." },
+          { en: "White box", vi: "Kiểm thử hộp trắng." },
+          { en: "Passive reconnaissance", vi: "Trinh sát thụ động." },
+          { en: "Vulnerability scan", vi: "Rà quét lỗ hổng." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A penetration tester harvests potential usernames from a social networking site. The penetration tester then uses social engineering to attempt to obtain associated passwords to gain unauthorized access.\nWhich method is being used?",
+        q_vi: "Tester thu thập username trên mạng xã hội rồi trực tiếp tiếp cận lừa đảo lấy mật khẩu để xâm nhập mạng.\nPhương pháp này thuộc nhóm nào?",
+        opts: [
+          { en: "Escalation of privilege", vi: "Leo thang đặc quyền." },
+          { en: "SQL injection", vi: "Tiêm SQL." },
+          { en: "Active reconnaissance", vi: "Thu thập thông tin chủ động (có tương tác với đối tượng)." },
+          { en: "Proxy server", vi: "Máy chủ Proxy." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "A CIO wants to know if a recently publicized significant flaw exists in their organization and to what extent they could be harmed.\nWhich of the following would BEST provide the needed information?",
+        q_vi: "Giám đốc CNTT muốn biết hệ thống có tồn tại lỗ hổng vừa được cảnh báo trên mạng hay không và mức độ ảnh hưởng ra sao.\nGiải pháp nào tốt nhất?",
+        opts: [
+          { en: "Penetration test", vi: "Kiểm thử thâm nhập (thường dùng để khai thác thực tế)." },
+          { en: "Vulnerability scan", vi: "Quét lỗ hổng bảo mật (Vulnerability scan - nhanh chóng xác định sự tồn tại của lỗi)." },
+          { en: "Active reconnaissance", vi: "Do thám chủ động." },
+          { en: "Patching assessment report", vi: "Báo cáo đánh giá vá lỗi." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "Which penetration testing concept is an attacker MOST interested in when placing the path of a malicious file in the Windows registry key HKLM...CurrentVersion/Run?",
+        q_vi: "Khi ghi đường dẫn mã độc vào Registry Run khởi động cùng Windows, kẻ tấn công hướng tới mục tiêu nào?",
+        opts: [
+          { en: "Persistence", vi: "Duy trì sự hiện diện lâu dài trên máy (Persistence)." },
+          { en: "Pivoting", vi: "Nhảy cóc sang máy khác trong mạng (Pivoting)." },
+          { en: "Active reconnaissance", vi: "Do thám chủ động." },
+          { en: "Escalation of privilege", vi: "Leo thang đặc quyền." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following methods is used by internal security teams to assess the security of internally developed applications?",
+        q_vi: "Phương pháp nào được đội ngũ bảo mật nội bộ áp dụng để đánh giá ứng dụng tự phát triển khi có sẵn mã nguồn?",
+        opts: [
+          { en: "Active reconnaissance", vi: "Trinh sát chủ động." },
+          { en: "Pivoting", vi: "Chuyển hướng tấn công." },
+          { en: "White box testing", vi: "Kiểm thử hộp trắng (White box - biết rõ mã nguồn và kiến trúc)." },
+          { en: "Persistence", vi: "Duy trì quyền truy cập." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Which of the following is being used when a malicious actor searches various social media websites to find information about a company's system administrators?",
+        q_vi: "Kẻ xấu tìm kiếm hồ sơ mạng xã hội của đội ngũ admin công ty để thu thập thông tin mà không tiếp xúc trực tiếp.\nĐây là kỹ thuật gì?",
+        opts: [
+          { en: "Passive reconnaissance", vi: "Do thám thụ động (Passive reconnaissance)." },
+          { en: "Initial exploitation", vi: "Khai thác ban đầu." },
+          { en: "Vulnerability scanning", vi: "Quét lỗ hổng." },
+          { en: "Social engineering", vi: "Tấn công tâm lý xã hội." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following can occur when a scanning tool cannot authenticate to a server and has to rely on limited information obtained from service banners?",
+        q_vi: "Điều gì có thể xảy ra khi công cụ quét không có quyền đăng nhập vào máy chủ mà chỉ phán đoán qua thông tin banner dịch vụ?",
+        opts: [
+          { en: "False positive", vi: "Báo động giả (False positive - tưởng có lỗi nhưng thực tế đã vá)." },
+          { en: "Passive reconnaissance", vi: "Trinh sát thụ động." },
+          { en: "Access violation", vi: "Vi phạm truy cập." },
+          { en: "Privilege escalation", vi: "Leo thang đặc quyền." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A company hires a firm to crawl its Active Directory network with a non-domain account looking for unpatched systems. Actively taking control of systems is strictly out of scope.\nWhat is the firm hired for?",
+        q_vi: "Công ty thuê đơn vị rà tìm các máy chưa vá bản cập nhật nhưng tuyệt đối không được phép khai thác/chiếm quyền kiểm soát máy tính.\nDịch vụ này là gì?",
+        opts: [
+          { en: "Vulnerability scanning", vi: "Quét rà soát lỗ hổng (Vulnerability scanning)." },
+          { en: "Penetration testing", vi: "Kiểm thử thâm nhập (Pentest)." },
+          { en: "Application fuzzing", vi: "Kiểm thử Fuzzing ứng dụng." },
+          { en: "User permission auditing", vi: "Kiểm toán quyền hạn người dùng." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Audit logs show:\n- Server001 (internal HR): buffer overflow\n- Server101 (Internet-facing web): buffer overflow\n- Server201 (SQL for Server101): OS updates not current\n- Server301 (Jumpbox internal): privilege escalation\nAssuming external attacks are highest concern, which to address FIRST?",
+        q_vi: "Nếu mối lo ngại lớn nhất là kẻ tấn công từ bên ngoài Internet lấy cắp dữ liệu, máy chủ nào phải được xử lý đầu tiên?",
+        opts: [
+          { en: "Server001", vi: "Server001 (máy chủ nhân sự nội bộ)." },
+          { en: "Server101", vi: "Server101 (máy chủ web công khai trên Internet bị dính tràn bộ đệm)." },
+          { en: "Server201", vi: "Server201 (máy chủ SQL phía sau)." },
+          { en: "Server301", vi: "Server301 (Jumpbox trong mạng LAN)." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A new mobile app is developed. Scanning at the end of the project shows fundamental issues that were missed.\nWhich activity should have been performed earlier in the lifecycle?",
+        q_vi: "Phần mềm đến cuối dự án quét mới phát hiện lỗi kiến trúc nghiêm trọng.\nHoạt động bảo mật nào nên được tiến hành sớm ngay trong quá trình viết code?",
+        opts: [
+          { en: "Architecture review", vi: "Đánh giá kiến trúc." },
+          { en: "Risk assessment", vi: "Đánh giá rủi ro." },
+          { en: "Protocol analysis", vi: "Phân tích giao thức." },
+          { en: "Code review", vi: "Rà soát mã nguồn (Code review liên tục)." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "Which of the following would verify that a threat does exist and security controls can easily be bypassed without actively testing/exploiting an application?",
+        q_vi: "Phương thức nào giúp xác thực mối đe dọa tồn tại mà không cần chủ động gửi tải độc hại tấn công thử nghiệm vào ứng dụng?",
+        opts: [
+          { en: "Protocol analyzer", vi: "Trình phân tích giao thức." },
+          { en: "Vulnerability scan", vi: "Quét lỗ hổng bảo mật (Vulnerability scan)." },
+          { en: "Penetration test", vi: "Kiểm thử thâm nhập (có tấn công khai thác)." },
+          { en: "Port scanner", vi: "Trình quét cổng mạng." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A penetration tester must provide data that proves and validates the scanning tools' results to the client.\nWhich is the best method?",
+        q_vi: "Để cung cấp bằng chứng khách quan chứng minh lưu lượng mà công cụ quét đã gửi/nhận, tester nên làm gì?",
+        opts: [
+          { en: "Set up firewall to permit and log outbound", vi: "Ghi log tường lửa máy quét." },
+          { en: "Use a protocol analyzer to log all pertinent network traffic", vi: "Dùng bộ phân tích giao thức (Wireshark/tcpdump) ghi lại toàn bộ gói tin." },
+          { en: "Configure network flow data logging", vi: "Ghi nhật ký NetFlow." },
+          { en: "Enable debug level logging on tools", vi: "Bật log gỡ lỗi trên phần mềm." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A gaming console manufacturer wants to reduce the risk of malicious customers circumventing controls by modifying consoles. (Choose two.)",
+        q_vi: "Nhà sản xuất thiết bị máy chơi game muốn ngăn người dùng bẻ khóa/mod phần cứng, phần mềm. (Chọn 2 đáp án)",
+        opts: [
+          { en: "Firmware version control", vi: "Kiểm soát phiên bản Firmware nghiêm ngặt." },
+          { en: "Manual software upgrades", vi: "Nâng cấp phần mềm thủ công." },
+          { en: "Vulnerability scanning", vi: "Quét lỗ hổng máy game." },
+          { en: "Automatic updates", vi: "Tự động cập nhật hệ thống (Automatic updates)." },
+          { en: "Network segmentation", vi: "Phân đoạn mạng." },
+          { en: "Application firewalls", vi: "Tường lửa ứng dụng." }
+        ],
+        ans: [0, 3]
+      },
+      {
+        q: "A security analyst has set up a network tap to monitor network traffic for vulnerabilities.\nWhich technique describes this approach?",
+        q_vi: "Gắn thiết bị Network Tap vào đường truyền để theo dõi lưu lượng tìm kiếm điểm yếu là kỹ thuật gì?",
+        opts: [
+          { en: "Compliance scanning", vi: "Quét tuân thủ tiêu chuẩn." },
+          { en: "Credentialed scanning", vi: "Quét có xác thực tài khoản." },
+          { en: "Passive vulnerability scanning", vi: "Quét lỗ hổng dạng thụ động (không gửi thêm lưu lượng rác vào mạng)." },
+          { en: "Port scanning", vi: "Quét mở cổng mạng." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "An analyst is attempting to identify vulnerabilities in a customer's web app without impacting the system or its data.\nWhich describes this concept?",
+        q_vi: "Tìm kiếm lỗ hổng của ứng dụng web mà không làm gián đoạn hệ thống hoặc ảnh hưởng dữ liệu đang chạy là:",
+        opts: [
+          { en: "Aggressive scan", vi: "Quét tấn công dồn dập." },
+          { en: "Passive scan", vi: "Quét thụ động (Passive scan)." },
+          { en: "Non-credentialed scan", vi: "Quét không cần quyền đăng nhập." },
+          { en: "Compliance scan", vi: "Quét kiểm tra tuân thủ." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A remote intruder wants to take inventory of a network and looks for information about software versions on hosts.\nWhich technique is being used?",
+        q_vi: "Kẻ xâm nhập tìm kiếm thông tin về tên và phiên bản chính xác của phần mềm đang chạy trên máy chủ mục tiêu. Kỹ thuật này là:",
+        opts: [
+          { en: "Banner grabbing", vi: "Bắt biểu ngữ dịch vụ (Banner grabbing)." },
+          { en: "Port scanning", vi: "Quét cổng dịch vụ." },
+          { en: "Packet sniffing", vi: "Bắt trộm gói tin mạng." },
+          { en: "Virus scanning", vi: "Quét virus." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Vulnerability assessment shows Database MD5 password column is NOT salted. There have been several web breaches. The team must mitigate impact and reduce offline attacks. (Choose two.)",
+        q_vi: "Cơ sở dữ liệu bị lộ đang lưu mật khẩu băm MD5 không có muối (Salt). Hai giải pháp nào khắc phục tốt nhất? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Start using salts to generate MD5 password hashes", vi: "Thêm muối (Salt) ngẫu nhiên vào chuỗi hash MD5." },
+          { en: "Generate password hashes using SHA-256", vi: "Tạo hash bằng SHA-256." },
+          { en: "Force users to change passwords the next time they log on", vi: "Bắt buộc người dùng phải đổi mật khẩu ở lần đăng nhập tới." },
+          { en: "Limit users to five attempted logons", vi: "Giới hạn số lần đăng nhập sai." },
+          { en: "Require the web server to only use TLS 1.2", vi: "Bắt buộc dùng TLS 1.2." }
+        ],
+        ans: [0, 2]
+      },
+      {
+        q: "To get the most accurate results on the security posture of a system, what should the analyst do prior to scanning?",
+        q_vi: "Để nhận được kết quả rà quét chính xác và phát hiện đúng các lỗ hổng mới nhất, kỹ sư cần làm gì trước khi quét?",
+        opts: [
+          { en: "Log all users out of the system", vi: "Đăng xuất toàn bộ người dùng." },
+          { en: "Patch the scanner", vi: "Cập nhật bản vá/cơ sở dữ liệu plugin mới nhất cho máy quét." },
+          { en: "Reboot the target host", vi: "Khởi động lại máy chủ mục tiêu." },
+          { en: "Update the web plugins", vi: "Cập nhật plugin trình duyệt." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A highly complex password policy makes cracking passwords nearly impossible. Which attack might a hacker still perform?",
+        q_vi: "Chính sách mật khẩu cực kỳ phức tạp khiến việc bẻ khóa mật khẩu gần như bất khả thi. Hacker vẫn có thể thực hiện hình thức nào?",
+        opts: [
+          { en: "Pass-the-hash attack", vi: "Tấn công vượt xác thực bằng chuỗi băm (Pass-the-hash - không cần biết pass gốc)." },
+          { en: "ARP poisoning attack", vi: "Tấn công đầu độc ARP." },
+          { en: "Birthday attack", vi: "Tấn công ngày sinh." },
+          { en: "Brute force attack", vi: "Tấn công dò quét vét cạn (Brute force)." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following differentiates ARP poisoning from a MAC spoofing attack?",
+        q_vi: "Điểm khác biệt mấu chốt giữa tấn công đầu độc ARP và tấn công giả mạo MAC là gì?",
+        opts: [
+          { en: "ARP poisoning uses unsolicited ARP replies.", vi: "ARP poisoning liên tục gửi các gói tin trả lời ARP không mong muốn (unsolicited)." },
+          { en: "ARP poisoning overflows a switch's CAM table.", vi: "ARP poisoning làm tràn bảng CAM của Switch." },
+          { en: "MAC spoofing uses DHCPOFFER packets.", vi: "MAC spoofing sử dụng gói tin DHCP." },
+          { en: "MAC spoofing can be performed across multiple routers.", vi: "MAC spoofing có thể chạy qua nhiều Router." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following enables sniffing attacks against a switched network?",
+        q_vi: "Kỹ thuật nào cho phép kẻ tấn công nghe lén được các gói tin trong môi trường mạng dùng thiết bị Switch?",
+        opts: [
+          { en: "ARP poisoning", vi: "Đầu độc ARP (ARP poisoning chuyển hướng luồng dữ liệu qua máy hacker)." },
+          { en: "IGMP snooping", vi: "Kỹ thuật IGMP snooping." },
+          { en: "IP spoofing", vi: "Giả mạo địa chỉ IP." },
+          { en: "SYN flooding", vi: "Tấn công ngập lụt gói tin SYN." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Workstation enters www.example.com but www.notexample.com opens. Other sites work normally. Which occurred? (Choose two.)",
+        q_vi: "Người dùng truy cập đúng tên miền nhưng bị chuyển sang trang web lạ, các trang khác bình thường. Hiện tượng gì đã xảy ra? (Chọn 2 đáp án)",
+        opts: [
+          { en: "ARP poisoning", vi: "Đầu độc ARP (ARP poisoning)." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm." },
+          { en: "DNS poisoning", vi: "Đầu độc bộ nhớ đệm DNS (DNS poisoning)." },
+          { en: "Domain hijacking", vi: "Cướp tên miền qua nhà đăng ký." },
+          { en: "IP spoofing", vi: "Giả mạo IP." }
+        ],
+        ans: [0, 2]
+      },
+      {
+        q: "An old and low-performing edge switch was unexpectedly elected to be the spanning tree root bridge. Why?",
+        q_vi: "Tại sao một chiếc Switch rìa đời cũ, hiệu năng kém lại vô tình được bầu chọn làm Root Bridge trong giao thức STP?",
+        opts: [
+          { en: "The switch also serves as the DHCP server", vi: "Switch đồng thời làm máy chủ DHCP." },
+          { en: "The switch has the lowest MAC address", vi: "Switch có địa chỉ MAC nhỏ nhất (lowest MAC address)." },
+          { en: "The switch has spanning tree loop protection enabled", vi: "Switch có bật tính năng chống loop." },
+          { en: "The switch has the fastest uplink port", vi: "Switch có cổng kết nối nhanh nhất." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "Which of the following attacks specifically impact data availability?",
+        q_vi: "Hình thức tấn công nào nhắm trực tiếp vào việc phá hủy tính sẵn sàng (Availability) của dữ liệu/dịch vụ?",
+        opts: [
+          { en: "DDoS", vi: "Tấn công từ chối dịch vụ phân tán (DDoS)." },
+          { en: "Trojan", vi: "Mã độc Trojan cài ngầm." },
+          { en: "MITM", vi: "Tấn công nghe lén đứng giữa." },
+          { en: "Rootkit", vi: "Mã độc Rootkit." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A smart refrigerator was exploited by a botnet to send outbound GRE packets to crash a website. What category does it belong to?",
+        q_vi: "Chiếc tủ lạnh thông minh bị botnet lợi dụng tấn công DDoS thuộc danh mục thiết bị nào?",
+        opts: [
+          { en: "SoC", vi: "Hệ thống trên một vi mạch (System on Chip)." },
+          { en: "ICS", vi: "Hệ thống điều khiển công nghiệp." },
+          { en: "IoT", vi: "Thiết bị Internet vạn vật (Internet of Things)." },
+          { en: "MFD", vi: "Thiết bị đa chức năng." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Which of the following types of attacks precedes the installation of a rootkit on a server?",
+        q_vi: "Bước tấn công nào thường phải diễn ra trước khi kẻ xâm nhập có thể cài đặt được Rootkit vào máy chủ?",
+        opts: [
+          { en: "Pharming", vi: "Tấn công lừa đảo Pharming." },
+          { en: "DDoS", vi: "Tấn công từ chối dịch vụ." },
+          { en: "Privilege escalation", vi: "Leo thang đặc quyền hệ thống (lên mức Root/Administrator)." },
+          { en: "DoS", vi: "Tấn công DoS." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "A server has 100% CPU utilization for 24h caused by antivirus software. If left unresolved, which could occur? (Choose two.)",
+        q_vi: "Máy chủ bị treo 100% CPU suốt 24 giờ do phần mềm diệt virus. Hậu quả nào có thể phát sinh? (Chọn 2 đáp án)",
+        opts: [
+          { en: "MITM attack", vi: "Bị tấn công Man-in-the-Middle." },
+          { en: "DoS attack", vi: "Dẫn đến tình trạng từ chối dịch vụ (DoS) cho người dùng." },
+          { en: "DLL injection", vi: "Tiêm mã độc DLL." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm." },
+          { en: "Resource exhaustion", vi: "Cạn kiệt tài nguyên xử lý (Resource exhaustion)." }
+        ],
+        ans: [1, 4]
+      },
+      {
+        q: "A bank application can only handle 500 sessions and perimeter router handles 1Gbps. Which should be implemented to prevent future DoS?",
+        q_vi: "Ứng dụng ngân hàng chỉ chịu được 500 session và router chịu tải 1Gbps. Giải pháp nào ngăn chặn DoS tương lai tốt nhất?",
+        opts: [
+          { en: "Deploy multiple web servers and implement a load balancer", vi: "Triển khai nhiều cụm máy chủ và sử dụng bộ cân bằng tải (Load Balancer)." },
+          { en: "Increase perimeter router to 10 Gbps", vi: "Tăng băng thông router lên 10Gbps." },
+          { en: "Install a firewall at the network to prevent all attacks", vi: "Lắp tường lửa chặn tất cả các cuộc tấn công." },
+          { en: "Use redundancy across all network devices and services", vi: "Dự phòng toàn bộ thiết bị mạng." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A security administrator suspects that a DDoS attack is affecting the DNS server. Which command should the administrator run to check name resolution?",
+        q_vi: "Quản trị viên nghi ngờ máy chủ DNS bị DDoS làm mất phân giải tên miền. Lệnh nào giúp kiểm tra khả năng phân giải?",
+        opts: [
+          { en: "dig www.google.com", vi: "dig www.google.com (truy vấn phân giải tên miền ra địa chỉ IP)." },
+          { en: "dig 192.168.1.254", vi: "dig địa chỉ IP Gateway." },
+          { en: "dig workstation01.com", vi: "dig tên máy trạm nội bộ." },
+          { en: "dig 192.168.1.26", vi: "dig địa chỉ máy nội bộ." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "User file has grayed-out icon with lock, pop-up demands Bitcoin payment, later other users lose access. What occurred? (Choose three.)",
+        q_vi: "Tệp bị khóa biểu tượng ổ khóa, bảng đòi tiền chuộc Bitcoin hiện lên và lan sang máy khác. Những khái niệm nào đúng? (Chọn 3 đáp án)",
+        opts: [
+          { en: "Crypto-malware", vi: "Mã độc mã hóa dữ liệu (Crypto-malware)." },
+          { en: "Adware", vi: "Phần mềm quảng cáo phiền toái." },
+          { en: "Botnet attack", vi: "Tấn công mạng máy tính ma." },
+          { en: "Virus", vi: "Mã độc có khả năng lây lan (Virus)." },
+          { en: "Ransomware", vi: "Mã độc tống tiền (Ransomware)." },
+          { en: "Backdoor", vi: "Cửa sau xâm nhập." },
+          { en: "DDoS attack", vi: "Tấn công từ chối dịch vụ phân tán." }
+        ],
+        ans: [0, 3, 4]
+      },
+      {
+        q: "Which of the following is an example of resource exhaustion?",
+        q_vi: "Tình huống nào dưới đây là ví dụ điển hình của việc làm cạn kiệt tài nguyên (Resource exhaustion)?",
+        opts: [
+          { en: "A penetration tester requests every available IP address from a DHCP server.", vi: "Tester gửi yêu cầu thuê cạn sạch mọi địa chỉ IP có trên DHCP Server (DHCP Starvation)." },
+          { en: "An SQL injection attack returns confidential data back to the browser.", vi: "Tấn công SQLi làm lộ dữ liệu mật." },
+          { en: "Server CPU utilization peaks at 100% during the reboot process.", vi: "CPU tăng 100% tức thời trong lúc khởi động lại." },
+          { en: "System requires 12GB RAM, but only 8GB are available.", vi: "Cấu hình phần mềm đòi hỏi RAM cao hơn thực tế." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "An external attacker can modify the ARP cache of an internal computer.\nWhich of the following types of attacks is described?",
+        q_vi: "Kẻ tấn công từ bên ngoài có thể can thiệp làm sai lệch bộ nhớ đệm ARP của máy tính nội bộ. Đây là hình thức tấn công nào?",
+        opts: [
+          { en: "Replay", vi: "Tấn công phát lại." },
+          { en: "Spoofing", vi: "Tấn công giả mạo (ARP Spoofing/Poisoning)." },
+          { en: "DNS poisoning", vi: "Đầu độc DNS." },
+          { en: "Client-side attack", vi: "Tấn công phía máy khách." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "An analyst is reviewing this code before deployment:\n<pre class=\"code-block\">void foo (char *bar) {\n  char random_user_input [12];\n  strcpy (random_user_input, bar);\n}</pre>\nWhich of the following vulnerabilities is present?",
+        q_vi: "Đoạn mã dùng hàm `strcpy` sao chép dữ liệu từ `bar` vào mảng kích thước cố định 12 ký tự mà không kiểm tra độ dài. Lỗ hổng nào tồn tại?",
+        opts: [
+          { en: "Bad memory pointer", vi: "Con trỏ bộ nhớ hỏng." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm (Buffer overflow)." },
+          { en: "Integer overflow", vi: "Tràn số nguyên." },
+          { en: "Backdoor", vi: "Cửa sau." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "Server compromise log shows processes:\n<pre class=\"code-block\">LSASS (DEP: YES, Local: 0.0.0.0, Remote: 10.210.100.62)\nAPACHE (DEP: NO, Local: 0.0.0.0, Remote: 10.130.210.20)\nMySQL (DEP: NO, Local: 127.0.0.1, Remote: 127.0.0.1)\nTFTP (DEP: YES, Local: 191.168.1.10, Remote: 10.34.221.96)</pre>\nWhich was MOST likely exploited via a remote buffer overflow?",
+        q_vi: "Dịch vụ nào có kết nối mạng từ xa và chạy giao thức truyền file không an toàn dễ bị tấn công tràn bộ đệm từ xa nhất?",
+        opts: [
+          { en: "Apache", vi: "Máy chủ web Apache." },
+          { en: "LSASS", vi: "Tiến trình xác thực Windows LSASS." },
+          { en: "MySQL", vi: "Cơ sở dữ liệu chỉ kết nối Localhost 127.0.0.1." },
+          { en: "TFTP", vi: "Dịch vụ TFTP (kết nối remote IP ngoài, giao thức UDP đơn giản dễ dính buffer overflow)." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "Vulnerability command succeeded:\n<pre class=\"code-block\">echo \"vrfy 'perl -e 'print \\\"hi\\\" x 500' ' \" | nc www.company.com 25</pre>\nWhich vulnerability is being exploited?",
+        q_vi: "Gửi chuỗi lặp lại 'hi' 500 lần vào cổng 25 (SMTP). Lỗ hổng nào đang bị khai thác?",
+        opts: [
+          { en: "Buffer overflow directed at a specific host MTA", vi: "Tràn bộ đệm nhắm vào phần mềm Mail Transfer Agent (MTA)." },
+          { en: "SQL injection directed at a web server", vi: "Tiêm mã độc SQL vào web server." },
+          { en: "Cross-site scripting directed at www.company.com", vi: "Tấn công XSS qua web." },
+          { en: "Race condition in a UNIX shell script", vi: "Lỗi tương tranh (Race condition) trong script." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Ann reports important files missing from her workstation. She received communication requesting funds to restore the files.\nWhich attack occurred?",
+        q_vi: "Tập tin bị mất tích và kẻ xấu liên lạc đòi nộp tiền để khôi phục lại dữ liệu. Tấn công gì đã xảy ra?",
+        opts: [
+          { en: "Ransomware", vi: "Mã độc tống tiền đòi tiền chuộc (Ransomware)." },
+          { en: "Keylogger", vi: "Mã độc ghi phím." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm." },
+          { en: "Rootkit", vi: "Mã độc Rootkit." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A buffer overflow can result in:",
+        q_vi: "Hậu quả nguy hiểm nhất của lỗi tràn bộ đệm (Buffer overflow) là dẫn đến điều gì?",
+        opts: [
+          { en: "loss of data caused by unauthorized command execution.", vi: "Mất mát dữ liệu do thực thi trái phép câu lệnh tùy ý của kẻ tấn công." },
+          { en: "privilege escalation caused by TPM override.", vi: "Leo thang đặc quyền do ghi đè chip TPM." },
+          { en: "reduced key strength due to salt manipulation.", vi: "Giảm độ mạnh khóa do thao túng muối." },
+          { en: "repeated use of one-time keys.", vi: "Tái sử dụng khóa một lần." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Syslog monitors: ping 10.25.27.31 with 65500 bytes of data (repeated several times). Which describes this activity?",
+        q_vi: "Gửi liên tục các gói tin Ping kích thước cực lớn 65,500 bytes đến một địa chỉ IP là hình thức gì?",
+        opts: [
+          { en: "Memory leak", vi: "Rò rỉ bộ nhớ." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm (tấn công Ping of Death nhằm gây tràn bộ đệm xử lý gói tin)." },
+          { en: "Null pointer dereference", vi: "Lỗi giải tham chiếu con trỏ rỗng." },
+          { en: "Integer overflow", vi: "Tràn số nguyên." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A developer has incorporated routines into the source code for controlling the length of the input passed to the program.\nWhich vulnerability is being protected against?",
+        q_vi: "Lập trình viên bổ sung đoạn mã giới hạn độ dài của dữ liệu đầu vào người dùng nhập. Biện pháp này phòng chống lỗ hổng nào?",
+        opts: [
+          { en: "DLL injection", vi: "Tiêm thư viện DLL." },
+          { en: "Memory leak", vi: "Rò rỉ ô nhớ." },
+          { en: "Buffer overflow", vi: "Tràn bộ đệm (Buffer overflow)." },
+          { en: "Pointer dereference", vi: "Giải tham chiếu con trỏ." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Repeatedly submitting large amounts of data, including custom code, allows execution at the administrator level due to missing input validation.\nWhich BEST identifies this?",
+        q_vi: "Ứng dụng thiếu kiểm tra đầu vào, kẻ xấu gửi khối lượng lớn dữ liệu chứa mã thực thi để chạy quyền Admin. Đây là tấn công gì?",
+        opts: [
+          { en: "Cross-site scripting", vi: "Tấn công XSS." },
+          { en: "Clickjacking", vi: "Bẫy nhấn chuột Clickjacking." },
+          { en: "Buffer overflow", vi: "Tấn công tràn bộ đệm (Buffer overflow thực thi mã tùy ý)." },
+          { en: "Replay", vi: "Tấn công phát lại." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "An analyst wants to increase FTP security while keeping the same port/protocol and still allowing unencrypted connections.\nWhich would BEST accomplish these goals?",
+        q_vi: "Nâng cao bảo mật máy chủ FTP nhưng vẫn giữ nguyên cổng, giao thức và cho phép cả kết nối chưa mã hóa lẫn mã hóa. Giải pháp tốt nhất là gì?",
+        opts: [
+          { en: "Require the SFTP protocol to connect to the file server.", vi: "Bắt buộc dùng SFTP (dùng cổng 22 của SSH, đổi giao thức)." },
+          { en: "Use implicit TLS on the FTP server.", vi: "Dùng Implicit TLS (đổi cổng sang 990)." },
+          { en: "Use explicit FTPS for connections.", vi: "Dùng Explicit FTPS (vẫn dùng cổng 21, nâng cấp lên TLS nếu client hỗ trợ)." },
+          { en: "Use SSH tunneling to encrypt the FTP traffic.", vi: "Dùng đường hầm SSH." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "An organization wishes to provide better security for its name resolution services.\nWhich technology BEST supports the deployment of DNSSEC?",
+        q_vi: "Công nghệ nền tảng nào hỗ trợ tốt nhất cho việc triển khai chữ ký số mở rộng cho hệ thống phân giải tên miền (DNSSEC)?",
+        opts: [
+          { en: "LDAP", vi: "Giao thức thư mục LDAP." },
+          { en: "TPM", vi: "Chip bảo mật phần cứng TPM." },
+          { en: "TLS", vi: "Giao thức TLS." },
+          { en: "SSL", vi: "Giao thức SSL." },
+          { en: "PKI", vi: "Hạ tầng khóa công khai (Public Key Infrastructure - PKI)." }
+        ],
+        ans: [4]
+      },
+      {
+        q: "A policy requires replacing insecure FTP and HTTP transfers with secure applications within the organization.\nWhich should be implemented?",
+        q_vi: "Tổ chức yêu cầu thay thế toàn bộ việc truyền tệp bằng FTP và HTTP sang các giao thức an toàn. Lựa chọn nào đúng chuẩn?",
+        opts: [
+          { en: "Replace FTP with SFTP and replace HTTP with TLS", vi: "Thay FTP bằng SFTP và thay HTTP bằng TLS/HTTPS." },
+          { en: "Replace FTP with FTPS and replace HTTP with TFTP", vi: "Thay FTP bằng FTPS và thay HTTP bằng TFTP (TFTP không bảo mật)." },
+          { en: "Replace FTP with SFTP and replace HTTP with Telnet", vi: "Thay HTTP bằng Telnet (Telnet gửi văn bản thô)." },
+          { en: "Replace FTP with FTPS and replace HTTP with IPSec", vi: "Thay HTTP bằng IPSec." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "RDP port is closed on the outbound firewall. Which allows remote access to the server using RDP on another port?",
+        q_vi: "Cổng RDP mặc định (3389) bị chặn ở firewall chiều ra. Giao thức nào giúp bọc gói tin RDP đi qua cổng khác một cách bảo mật?",
+        opts: [
+          { en: "TLS", vi: "TLS." },
+          { en: "MPLS", vi: "Chuyển mạch nhãn đa giao thức MPLS." },
+          { en: "SCP", vi: "Giao thức sao chép file SCP." },
+          { en: "SSH", vi: "SSH (sử dụng tính năng SSH Port Forwarding / SSH Tunneling)." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "A web server configured with TLS AES-GCM-256, SHA-384, and ECDSA suffered an information loss breach.\nWhich is MOST likely the cause?",
+        q_vi: "Máy chủ cấu hình các thuật toán mã hóa tối tân (AES-GCM-256, SHA-384, ECDSA) nhưng vẫn bị lộ dữ liệu. Đâu là nguyên nhân khả dĩ nhất?",
+        opts: [
+          { en: "Insufficient key bit length", vi: "Độ dài khóa không đủ dài." },
+          { en: "Weak cipher suite", vi: "Bộ mã hóa bị yếu." },
+          { en: "Unauthenticated encryption method", vi: "Phương pháp mã hóa chưa được xác thực." },
+          { en: "Poor implementation", vi: "Triển khai cấu hình kém hoặc lỗi phần mềm (Poor implementation)." }
+        ],
+        ans: [3]
+      },
+      {
+        q: "Users accessing company website are transparently redirected to another site despite entering correct URL.\nWhich BEST prevents this in the future?",
+        q_vi: "Người dùng gõ đúng địa chỉ web nhưng bị âm thầm chuyển hướng sang website giả mạo. Giải pháp nào ngăn chặn triệt để tình trạng này?",
+        opts: [
+          { en: "DNSSEC", vi: "DNSSEC (chống giả mạo và đầu độc bản ghi DNS)." },
+          { en: "HTTPS", vi: "Giao thức HTTPS." },
+          { en: "IPSec", vi: "Bộ giao thức IPSec." },
+          { en: "TLS/SSL", vi: "Chứng chỉ TLS/SSL." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following encryption algorithms is used primarily to secure data at rest?",
+        q_vi: "Thuật toán mã hóa nào dưới đây được sử dụng chủ yếu để bảo vệ dữ liệu lưu trữ tĩnh (Data at rest - trên ổ cứng, CSDL)?",
+        opts: [
+          { en: "AES", vi: "Chuẩn mã hóa nâng cao AES (mã hóa khối đối xứng hiệu năng cao)." },
+          { en: "SSL", vi: "Giao thức SSL (dữ liệu truyền trên mạng)." },
+          { en: "TLS", vi: "Giao thức TLS (dữ liệu truyền trên mạng)." },
+          { en: "RSA", vi: "Thuật toán bất đối xứng RSA (chủ yếu trao đổi khóa)." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Ann, a security analyst, wants to implement a secure exchange of email.\nWhich of the following is the BEST option to implement?",
+        q_vi: "Chuyên viên phân tích muốn thiết lập giải pháp gửi nhận email bảo mật toàn diện từ đầu cuối tới đầu cuối. Giải pháp nào tốt nhất?",
+        opts: [
+          { en: "PGP", vi: "PGP (Pretty Good Privacy - mã hóa và ký số nội dung email)." },
+          { en: "HTTPS", vi: "Giao thức web HTTPS." },
+          { en: "WPA", vi: "Chuẩn bảo mật mạng Wi-Fi." },
+          { en: "TLS", vi: "Giao thức mã hóa đường truyền TLS." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A company plans to encrypt and sign proprietary data in transit using certificates generated by PKI. Which protocols employ these certificates? (Choose three.)",
+        q_vi: "Giao thức nào có khả năng sử dụng trực tiếp chứng chỉ số do PKI phát hành để mã hóa và ký dữ liệu khi truyền tải? (Chọn 3 đáp án)",
+        opts: [
+          { en: "S/MIME", vi: "S/MIME (ký và mã hóa email bằng chứng chỉ PKI)." },
+          { en: "TLS", vi: "TLS (mã hóa kênh truyền web/dịch vụ qua chứng chỉ X.509)." },
+          { en: "SFTP", vi: "SFTP (truyền file dùng SSH key)." },
+          { en: "SAML", vi: "Giao thức xác thực SAML." },
+          { en: "SIP", vi: "Giao thức khởi tạo phiên SIP." },
+          { en: "IPSec", vi: "IPSec (sử dụng chứng chỉ số xác thực trong IKE)." },
+          { en: "Kerberos", vi: "Giao thức xác thực vé Kerberos." }
+        ],
+        ans: [0, 1, 5]
+      },
+      {
+        q: "Distribute a large sensitive report to managers in remote branches with local servers (email attachment is too large). Which protocols distribute it securely? (Choose three.)",
+        q_vi: "Cần gửi file báo cáo mật dung lượng quá lớn (vượt giới hạn email) đến máy chủ các chi nhánh. 3 giao thức nào hỗ trợ truyền an toàn?",
+        opts: [
+          { en: "S/MIME", vi: "S/MIME (qua email)." },
+          { en: "SSH", vi: "SSH (sử dụng SCP/SFTP nền SSH để truyền)." },
+          { en: "SNMPv3", vi: "Giao thức giám sát mạng SNMPv3." },
+          { en: "FTPS", vi: "FTPS (truyền tệp qua FTP có mã hóa TLS)." },
+          { en: "SRTP", vi: "Giao thức truyền âm thanh SRTP." },
+          { en: "HTTPS", vi: "HTTPS (tải tệp qua kênh web bảo mật SSL/TLS)." },
+          { en: "LDAPS", vi: "Truy vấn danh bạ người dùng LDAPS." }
+        ],
+        ans: [1, 3, 5]
+      },
+      {
+        q: "A system must check the validity of certificates even when internet access is unavailable.\nWhich MUST be implemented?",
+        q_vi: "Ứng dụng cần kiểm tra xem chứng chỉ số có bị thu hồi hay không ngay cả khi máy tính mất kết nối Internet. Cần triển khai gì?",
+        opts: [
+          { en: "CSR", vi: "Yêu cầu ký chứng chỉ CSR." },
+          { en: "OCSP", vi: "Giao thức kiểm tra trạng thái trực tuyến OCSP (đòi hỏi kết nối mạng liên tục)." },
+          { en: "CRL", vi: "Danh sách thu hồi chứng chỉ (CRL - tải danh sách về lưu cục bộ để tra cứu offline)." },
+          { en: "SSH", vi: "Giao thức SSH." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Which of the following use the SSH protocol? (Choose two)",
+        q_vi: "Những giao thức truyền tệp nào dưới đây hoạt động trên nền tảng của giao thức SSH? (Chọn 2 đáp án)",
+        opts: [
+          { en: "Stelnet", vi: "Stelnet." },
+          { en: "SCP", vi: "SCP (Secure Copy Protocol - sử dụng kết nối SSH cổng 22)." },
+          { en: "SNMP", vi: "Giao thức quản lý mạng SNMP." },
+          { en: "FTPS", vi: "FTPS (FTP qua TLS/SSL)." },
+          { en: "SSL", vi: "Lớp socket bảo mật SSL." },
+          { en: "SFTP", vi: "SFTP (SSH File Transfer Protocol)." }
+        ],
+        ans: [1, 5]
+      },
+      {
+        q: "Log shows:\n<pre class=\"code-block\">Mar 15 00:15:23.431 CRT: %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: msmith] [Source: 10.0.12.45] [localport: 23]</pre>\nWhich action protects data security?",
+        q_vi: "Dòng nhật ký cho thấy đăng nhập thành công vào cổng 23 (Telnet truyền rõ mật khẩu). Quản trị viên nên làm gì để bảo vệ dữ liệu?",
+        opts: [
+          { en: "Configure port security for logons", vi: "Cấu hình bảo mật cổng cho đăng nhập." },
+          { en: "Disable telnet and enable SSH", vi: "Tắt dịch vụ Telnet (port 23) và bật SSH (port 22) có mã hóa." },
+          { en: "Configure an AAA server", vi: "Cấu hình máy chủ AAA." },
+          { en: "Disable password and enable RSA authentication", vi: "Tắt mật khẩu và bật xác thực RSA." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A technician needs to remotely connect to a Unix web server behind a firewall to change code manually.\nWhich protocol to configure?",
+        q_vi: "Kỹ thuật viên cần kết nối dòng lệnh từ xa vào máy chủ web Unix sau tường lửa để sửa code trực tiếp. Giao thức nào cần mở?",
+        opts: [
+          { en: "SSH", vi: "SSH (Secure Shell - đăng nhập terminal từ xa có mã hóa)." },
+          { en: "SFTP", vi: "SFTP (chỉ dùng truyền file)." },
+          { en: "HTTPS", vi: "HTTPS (chỉ xem web)." },
+          { en: "SNMP", vi: "SNMP (chỉ giám sát thiết bị)." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "Which of the following uses tokens between the identity provider and the service provider to authenticate and authorize users to resources?",
+        q_vi: "Cơ chế nào sử dụng Token trung gian giữa nhà cung cấp danh tính (IdP) và nhà cung cấp dịch vụ (SP) để xác thực và cấp quyền cho người dùng?",
+        opts: [
+          { en: "RADIUS", vi: "Giao thức chứng thực mạng RADIUS." },
+          { en: "SSH", vi: "Giao thức kết nối SSH." },
+          { en: "OAuth", vi: "Khung ủy quyền OAuth (sử dụng Access Token)." },
+          { en: "MSCHAP", vi: "Giao thức bắt tay chứng thực MSCHAP." }
+        ],
+        ans: [2]
+      },
+      {
+        q: "Configure an IPSec solution that provides ESP with integrity protection, but not confidentiality protection.\nWhich AES mode meets this?",
+        q_vi: "Cần cấu hình IPSec ESP để bảo vệ tính toàn vẹn dữ liệu nhưng không cần tính năng giữ bí mật/mã hóa. Cơ chế AES nào đáp ứng yêu cầu này?",
+        opts: [
+          { en: "HMAC", vi: "HMAC (Keyed-Hash Message Authentication Code - chỉ xác thực tính toàn vẹn)." },
+          { en: "PCBC", vi: "Chế độ mã hóa khối PCBC." },
+          { en: "CBC", vi: "Chế độ Cipher Block Chaining." },
+          { en: "GCM", vi: "Chế độ Galois/Counter Mode." },
+          { en: "CFB", vi: "Chế độ Cipher Feedback." }
+        ],
+        ans: [0]
+      },
+      {
+        q: "A security administrator must implement a VPN supporting remote access over IPSEC.\nWhich is an encryption algorithm that meets this?",
+        q_vi: "Cần triển khai VPN truy cập từ xa qua IPSec. Thuật toán mã hóa đối xứng nào đáp ứng tiêu chuẩn?",
+        opts: [
+          { en: "MD5", vi: "MD5 (hàm băm, không phải thuật toán mã hóa dữ liệu)." },
+          { en: "AES", vi: "AES (thuật toán mã hóa đối xứng an toàn cho VPN IPSec)." },
+          { en: "UDP", vi: "Giao thức truyền tải UDP." },
+          { en: "PKI", vi: "Hạ tầng khóa công khai." }
+        ],
+        ans: [1]
+      },
+      {
+        q: "A site-to-site VPN requires SSL certificates for mutual auth. If design requires client MAC address to be visible across tunnel, implement what?",
+        q_vi: "Thiết kế VPN Site-to-Site đòi hỏi địa chỉ MAC của máy trạm phải hiển thị xuyên suốt qua đường hầm (mở rộng mạng ở Layer 2). Nên triển khai gì?",
+        opts: [
+          { en: "Tunnel mode IPSec", vi: "IPSec Tunnel mode (chỉ hoạt động ở tầng mạng IP Layer 3)." },
+          { en: "Transport mode VPN IPSec", vi: "IPSec Transport mode." },
+          { en: "L2TP", vi: "L2TP (Layer 2 Tunneling Protocol - đóng gói khung dữ liệu Layer 2 MAC address)." },
+          { en: "SSL VPN", vi: "SSL VPN thông thường." }
+        ],
+        ans: [2]
+      }
+    ];
+
+    let activeDataset = [...rawQuizDataset];
+    let currentIndex = 0;
+    let userAnswers = new Array(activeDataset.length).fill(null);
+    let multiTempSelection = [];
+    const alphabet = ["A", "B", "C", "D", "E", "F", "G"];
+
+    const qEnEl = document.getElementById("q-en");
+    const qViEl = document.getElementById("q-vi");
+    const optionsBoxEl = document.getElementById("options-box");
+    const qTypeBadge = document.getElementById("badge-question-type");
+    const qIndexBadge = document.getElementById("badge-question-index");
+    const btnPrev = document.getElementById("btn-prev");
+    const btnNext = document.getElementById("btn-next");
+    const btnSubmitMulti = document.getElementById("btn-submit-multi");
+    const statScore = document.getElementById("stat-score");
+    const statCorrect = document.getElementById("stat-correct");
+    const progressBar = document.getElementById("progress-bar");
+    const progressStep = document.getElementById("label-progress-step");
+    const progressPct = document.getElementById("label-progress-pct");
+    const questionGrid = document.getElementById("question-grid");
+    const quizCanvas = document.getElementById("quiz-canvas");
+    const summaryView = document.getElementById("summary-view");
+
+    function shuffleArray(arr) {
+      const cloned = [...arr];
+      for (let i = cloned.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+      }
+      return cloned;
+    }
+
+    function triggerManualShuffle() {
+      const hasAnsweredAny = userAnswers.some(a => a !== null);
+      if (hasAnsweredAny) {
+        const confirmShuffle = confirm("Trộn lại câu hỏi sẽ bắt đầu lại lượt làm bài từ câu đầu tiên. Bạn có muốn tiếp tục?");
+        if (!confirmShuffle) return;
+      }
+      restartQuiz(true);
+    }
+
+    function initNavigator() {
+      questionGrid.innerHTML = "";
+      activeDataset.forEach((_, idx) => {
+        const dot = document.createElement("div");
+        dot.className = "q-dot";
+        dot.id = `q-dot-${idx}`;
+        dot.textContent = idx + 1;
+        dot.onclick = () => jumpToQuestion(idx);
+        questionGrid.appendChild(dot);
+      });
+    }
+
+    function toggleNavGrid() {
+      const isHidden = questionGrid.style.display === "none";
+      questionGrid.style.display = isHidden ? "grid" : "none";
+      document.getElementById("nav-arrow").textContent = isHidden ? "▼" : "▲";
+    }
+
+    function renderQuestion(index) {
+      currentIndex = index;
+      const data = activeDataset[index];
+      const isMulti = data.ans.length > 1;
+      const answered = userAnswers[index] !== null;
+
+      qIndexBadge.textContent = `Câu #${index + 1} / ${activeDataset.length}`;
+      qTypeBadge.textContent = isMulti ? `Chọn ${data.ans.length} đáp án` : "Chọn 1 đáp án";
+
+      qEnEl.innerHTML = data.q;
+      qViEl.innerHTML = data.q_vi;
+
+      multiTempSelection = answered ? [...userAnswers[index]] : [];
+      optionsBoxEl.innerHTML = "";
+
+      data.opts.forEach((opt, optIdx) => {
+        const optDiv = document.createElement("div");
+        optDiv.className = "option-item";
+        optDiv.innerHTML = `
+          <span class="opt-letter">${alphabet[optIdx]}</span>
+          <div class="opt-content">
+            <span class="opt-en">${opt.en}</span>
+            <span class="opt-vi">${opt.vi}</span>
+          </div>
+        `;
+
+        if (answered) {
+          optDiv.classList.add("locked");
+          const isCorrectAnswer = data.ans.includes(optIdx);
+          const wasSelected = userAnswers[index].includes(optIdx);
+
+          if (isCorrectAnswer) {
+            optDiv.classList.add("correct");
+          } else if (wasSelected && !isCorrectAnswer) {
+            optDiv.classList.add("wrong");
+          }
+        } else {
+          optDiv.onclick = () => handleSelectOption(optIdx, isMulti, optDiv);
+        }
+
+        optionsBoxEl.appendChild(optDiv);
+      });
+
+      btnPrev.disabled = index === 0;
+      if (isMulti && !answered) {
+        btnSubmitMulti.style.display = "inline-flex";
+        btnNext.style.display = "none";
+      } else {
+        btnSubmitMulti.style.display = "none";
+        btnNext.style.display = "inline-flex";
+        btnNext.textContent = index === activeDataset.length - 1 ? "Xem kết quả 🏁" : "Câu tiếp theo →";
+      }
+
+      updateProgressAndStats();
+      updateNavHighlight();
+    }
+
+    function handleSelectOption(optIdx, isMulti, optDiv) {
+      if (!isMulti) {
+        userAnswers[currentIndex] = [optIdx];
+        renderQuestion(currentIndex);
+      } else {
+        if (multiTempSelection.includes(optIdx)) {
+          multiTempSelection = multiTempSelection.filter(i => i !== optIdx);
+          optDiv.classList.remove("selected");
+        } else {
+          if (multiTempSelection.length < activeDataset[currentIndex].ans.length) {
+            multiTempSelection.push(optIdx);
+            optDiv.classList.add("selected");
+          }
+        }
+      }
+    }
+
+    function submitMultiAnswer() {
+      if (multiTempSelection.length === 0) {
+        alert("Vui lòng chọn ít nhất một đáp án!");
+        return;
+      }
+      userAnswers[currentIndex] = [...multiTempSelection];
+      renderQuestion(currentIndex);
+    }
+
+    function updateProgressAndStats() {
+      let correctCount = 0;
+      let totalAnswered = 0;
+
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          totalAnswered++;
+          const target = activeDataset[idx].ans;
+          const isExact = ans.length === target.length && ans.every(v => target.includes(v));
+          if (isExact) correctCount++;
+        }
+      });
+
+      const pct = Math.round((totalAnswered / activeDataset.length) * 100);
+      progressBar.style.width = `${pct}%`;
+      progressStep.textContent = `Câu ${currentIndex + 1} trên ${activeDataset.length}`;
+      progressPct.textContent = `${pct}% hoàn thành`;
+
+      statCorrect.textContent = `${correctCount}/${activeDataset.length}`;
+      statScore.textContent = correctCount * 10;
+    }
+
+    function updateNavHighlight() {
+      activeDataset.forEach((_, idx) => {
+        const dot = document.getElementById(`q-dot-${idx}`);
+        if (!dot) return;
+
+        dot.className = "q-dot";
+        if (idx === currentIndex) dot.classList.add("active");
+
+        if (userAnswers[idx] !== null) {
+          const target = activeDataset[idx].ans;
+          const isExact = userAnswers[idx].length === target.length && userAnswers[idx].every(v => target.includes(v));
+          dot.classList.add(isExact ? "correct" : "incorrect");
+        }
+      });
+    }
+
+    function jumpToQuestion(idx) {
+      renderQuestion(idx);
+    }
+
+    function goToPrevQuestion() {
+      if (currentIndex > 0) renderQuestion(currentIndex - 1);
+    }
+
+    function goToNextQuestion() {
+      if (currentIndex < activeDataset.length - 1) {
+        renderQuestion(currentIndex + 1);
+      } else {
+        showFinalSummary();
+      }
+    }
+
+    function showFinalSummary() {
+      let correctCount = 0;
+      userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+          const target = activeDataset[idx].ans;
+          const isExact = ans.length === target.length && ans.every(v => target.includes(v));
+          if (isExact) correctCount++;
+        }
+      });
+
+      const total = activeDataset.length;
+      const incorrectCount = total - correctCount;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      quizCanvas.style.display = "none";
+      summaryView.style.display = "block";
+
+      document.getElementById("summary-percentage").textContent = `${percentage}%`;
+      document.getElementById("summary-correct").textContent = correctCount;
+      document.getElementById("summary-incorrect").textContent = incorrectCount;
+      document.getElementById("summary-total-score").textContent = correctCount * 10;
+
+      const titleEl = document.getElementById("summary-title");
+      const commentEl = document.getElementById("summary-comment");
+
+      if (percentage >= 85) {
+        titleEl.textContent = "Xuất sắc! Đạt chuẩn chuyên gia 🛡️";
+        commentEl.textContent = "Bạn nắm rất vững các kỹ năng rà quét, kiểm thử thâm nhập, mật mã học và bảo mật hệ thống mạng!";
+      } else if (percentage >= 65) {
+        titleEl.textContent = "Kết quả khá tốt! 🚀";
+        commentEl.textContent = "Nền tảng của bạn rất ổn định. Hãy xem lại các câu trả lời sai (được tô đỏ trong mục lục) để củng cố kỹ hơn.";
+      } else {
+        titleEl.textContent = "Cần ôn tập thêm 📚";
+        commentEl.textContent = "Hãy rà soát kỹ các kiến thức về giao thức truyền tin an toàn, các dạng tấn công mã độc và cấu hình kiểm soát mạng.";
+      }
+    }
+
+    function restartQuiz(shouldShuffle = false) {
+      if (shouldShuffle) {
+        activeDataset = shuffleArray(rawQuizDataset);
+      } else {
+        activeDataset = [...rawQuizDataset];
+      }
+
+      userAnswers = new Array(activeDataset.length).fill(null);
+      summaryView.style.display = "none";
+      quizCanvas.style.display = "flex";
+
+      initNavigator();
+      renderQuestion(0);
+    }
+
+    initNavigator();
+    renderQuestion(0);
+  </script>
+</body>
+</html>
